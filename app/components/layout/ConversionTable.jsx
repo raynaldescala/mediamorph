@@ -207,7 +207,23 @@ export default function ConversionTable({ files }) {
                       "1",
                       outputName,
                   ]
-                : ["-i", file.name, outputName];
+                : category === "video"
+                  ? [
+                        "-i",
+                        file.name,
+                        "-c:v",
+                        "libvpx-vp9",
+                        "-b:v",
+                        "0", // Required when using CRF mode.
+                        "-crf",
+                        "32", // Adjust CRF to balance quality and speed.
+                        "-threads",
+                        "4", // Use multiple threads.
+                        "-c:a",
+                        "libopus", // Use libopus for audio in WebM.
+                        outputName,
+                    ]
+                  : ["-i", file.name, outputName];
 
         await ffmpeg.exec(args);
         const data = await ffmpeg.readFile(outputName);
@@ -226,27 +242,28 @@ export default function ConversionTable({ files }) {
         }));
     };
 
-    // Function to convert all files sequentially.
+    // Function to convert all files in parallel.
     const convertAll = async () => {
-        for (let file of files) {
+        const promises = files.map((file) => {
             const conversion = conversions[file.name];
             if (
                 conversion &&
                 conversion.target &&
                 conversion.target !== "none"
             ) {
-                // Mark file as converting.
                 setConversions((prev) => ({
                     ...prev,
                     [file.name]: { ...prev[file.name], isConverting: true },
                 }));
-                await startConversion(
+                return startConversion(
                     file,
                     conversion.target,
                     getFileCategory(file.type),
                 );
             }
-        }
+            return Promise.resolve();
+        });
+        await Promise.all(promises);
     };
 
     return (
