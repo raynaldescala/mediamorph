@@ -305,7 +305,9 @@ export default function ConversionTable({ files }) {
                                         value={target || "none"}
                                     >
                                         <SelectTrigger className="w-24">
-                                            <SelectValue placeholder="..." />
+                                            <SelectValue>
+                                                {target || "..."}
+                                            </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup className="grid grid-cols-2">
