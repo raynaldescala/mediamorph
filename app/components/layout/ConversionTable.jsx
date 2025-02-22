@@ -207,23 +207,7 @@ export default function ConversionTable({ files }) {
                       "1",
                       outputName,
                   ]
-                : category === "video"
-                  ? [
-                        "-i",
-                        file.name,
-                        "-c:v",
-                        "libvpx-vp9",
-                        "-b:v",
-                        "0", // Required when using CRF mode.
-                        "-crf",
-                        "32", // Adjust CRF to balance quality and speed.
-                        "-threads",
-                        "4", // Use multiple threads.
-                        "-c:a",
-                        "libopus", // Use libopus for audio in WebM.
-                        outputName,
-                    ]
-                  : ["-i", file.name, outputName];
+                : ["-i", file.name, outputName];
 
         await ffmpeg.exec(args);
         const data = await ffmpeg.readFile(outputName);
