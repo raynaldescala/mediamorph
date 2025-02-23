@@ -351,13 +351,14 @@ export default function ConversionTable({ files }) {
                         </div>
                         {url && (
                             <div className="mt-2">
-                                <a
-                                    href={url}
-                                    download={`${name.split(".")[0]}.${conversion.target}`}
-                                    className="btn btn-outline"
-                                >
-                                    Download Converted File
-                                </a>
+                                <Button variant="outline" asChild>
+                                    <a
+                                        href={url}
+                                        download={`${name.split(".")[0]}.${conversion.target}`}
+                                    >
+                                        Download Converted File
+                                    </a>
+                                </Button>
                             </div>
                         )}
                     </div>
