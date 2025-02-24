@@ -57,11 +57,10 @@ function FileDropzone({ onFilesAccepted }) {
             },
         });
 
-    const borderClass = isDropped
-        ? "border-border"
-        : isDragActive && isDragReject
-          ? "border-destructive/40"
-          : "border-border";
+    const borderClass =
+        isDragActive && isDragReject
+            ? "border-destructive/40"
+            : "border-border";
 
     return (
         <div
